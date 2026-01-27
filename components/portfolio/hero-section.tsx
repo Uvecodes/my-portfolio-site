@@ -33,9 +33,39 @@ export function HeroSection() {
         />
       </div>
 
+      <style>{`
+        @keyframes shimmer {
+          0% {
+            left: -100%;
+          }
+          100% {
+            left: 100%;
+          }
+        }
+        .shimmer-effect {
+          position: relative;
+          overflow: hidden;
+        }
+        .shimmer-effect::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 2px;
+          height: 100%;
+          background: linear-gradient(10deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+          animation: shimmer 5s infinite;
+          pointer-events: none;
+          z-index: 10;
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+          filter: blur(8px);
+          transform: skewX(30deg);
+        }
+      `}</style>
+
       <div className="relative z-10 text-center max-w-4xl mx-auto">
         {/* Available badge */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-card/50 backdrop-blur-sm px-4 py-2 mb-8">
+        <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-card/50 backdrop-blur-sm px-4 py-2 mb-8 shimmer-effect relative">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
@@ -51,7 +81,7 @@ export function HeroSection() {
         {/* Title with typewriter effect */}
         <h2 className="text-4xl md:text-6xl font-bold text-primary mb-8">
           {displayText}
-          <span className="animate-pulse">|</span>
+          <span className="animate-pulse"></span>
         </h2>
 
         {/* Description */}
