@@ -11,7 +11,7 @@ export function AboutSection() {
             <div className="relative w-full aspect-[3/4] max-w-md mx-auto rounded-3xl overflow-hidden bg-primary">
               <Image
                 src="/images/portrait.jpg"
-                alt="Michael Anokam illustration"
+                alt="VICTOR UGO"
                 fill
                 className="object-cover"
               />

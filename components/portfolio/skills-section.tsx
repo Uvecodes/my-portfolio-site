@@ -24,15 +24,51 @@ const skillCategories = [
 ]
 
 const techLogos = [
-  { name: "Next.js", icon: "N" },
-  { name: "React", icon: "R" },
-  { name: "Three.js", icon: "3" },
-  { name: "TypeScript", icon: "TS" },
-  { name: "PostgreSQL", icon: "PG" },
-  { name: "MongoDB", icon: "M" },
-  { name: "Docker", icon: "D" },
-  { name: "AWS", icon: "AWS" },
-  { name: "Azure", icon: "AZ" },
+  { 
+    name: "Next.js", 
+    logoUrl: "https://cdn.simpleicons.org/nextdotjs/000000",
+    darkLogoUrl: "https://cdn.simpleicons.org/nextdotjs/ffffff"
+  },
+  { 
+    name: "React", 
+    logoUrl: "https://cdn.simpleicons.org/react/61DAFB",
+    darkLogoUrl: "https://cdn.simpleicons.org/react/61DAFB"
+  },
+  { 
+    name: "Three.js", 
+    logoUrl: "https://cdn.simpleicons.org/threedotjs/000000",
+    darkLogoUrl: "https://cdn.simpleicons.org/threedotjs/ffffff"
+  },
+  { 
+    name: "TypeScript", 
+    logoUrl: "https://cdn.simpleicons.org/typescript/3178C6",
+    darkLogoUrl: "https://cdn.simpleicons.org/typescript/3178C6"
+  },
+  { 
+    name: "PostgreSQL", 
+    logoUrl: "https://cdn.simpleicons.org/postgresql/4169E1",
+    darkLogoUrl: "https://cdn.simpleicons.org/postgresql/4169E1"
+  },
+  { 
+    name: "MongoDB", 
+    logoUrl: "https://cdn.simpleicons.org/mongodb/47A248",
+    darkLogoUrl: "https://cdn.simpleicons.org/mongodb/47A248"
+  },
+  { 
+    name: "Docker", 
+    logoUrl: "https://cdn.simpleicons.org/docker/2496ED",
+    darkLogoUrl: "https://cdn.simpleicons.org/docker/2496ED"
+  },
+  { 
+    name: "AWS", 
+    logoUrl: "https://cdn.simpleicons.org/amazonaws/232F3E",
+    darkLogoUrl: "https://cdn.simpleicons.org/amazonaws/FF9900"
+  },
+  { 
+    name: "Azure", 
+    logoUrl: "https://cdn.simpleicons.org/microsoftazure/0078D4",
+    darkLogoUrl: "https://cdn.simpleicons.org/microsoftazure/0078D4"
+  },
 ]
 
 export function SkillsSection() {
@@ -85,9 +121,18 @@ export function SkillsSection() {
             {[...techLogos, ...techLogos].map((tech, index) => (
               <div
                 key={index}
-                className="flex items-center justify-center w-16 h-16 rounded-xl bg-secondary/30 text-muted-foreground/50 font-mono text-sm shrink-0"
+                className="flex items-center justify-center w-16 h-16 rounded-xl bg-secondary/30 shrink-0 p-3"
               >
-                {tech.icon}
+                <img
+                  src={tech.logoUrl}
+                  alt={tech.name}
+                  className="w-full h-full object-contain dark:hidden"
+                />
+                <img
+                  src={tech.darkLogoUrl}
+                  alt={tech.name}
+                  className="w-full h-full object-contain hidden dark:block"
+                />
               </div>
             ))}
           </div>

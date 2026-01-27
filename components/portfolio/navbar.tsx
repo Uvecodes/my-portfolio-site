@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Home, Sun, Moon, Download } from "lucide-react"
+import { Home, Sun, Moon, Download, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
@@ -34,6 +34,8 @@ export function Navbar() {
   const [isDark, setIsDark] = useState(true)
   const [scrolled, setScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -77,72 +79,162 @@ export function Navbar() {
     }
   }, [isDark])
 
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMobileMenuOpen])
+
   if (!mounted) return null
 
+  const handleResumeDownload = () => {
+    const link = document.createElement('a')
+    link.href = '/Resume.pdf'
+    link.download = 'Victor_Ugo_Resume.pdf'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    setIsMobileMenuOpen(false)
+  }
+
   return (
-    <nav className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${scrolled ? "top-2" : "top-4"}`}>
-      <div className="flex items-center gap-1 rounded-full border border-border/50 bg-card/80 backdrop-blur-md px-2 py-2">
-        {/* Avatar */}
-        <Link href="/" className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
-          <Image
-            src="/images/avatar.jpg"
-            alt="VICTOR UGO"
-            width={40}
-            height={40}
-            className="object-cover"
-          />
-        </Link>
+    <nav className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${scrolled ? "top-2" : "top-4"}`} ref={menuRef}>
+      <div className="relative">
+        <div className="flex items-center gap-1 rounded-full border border-border/50 bg-card/80 backdrop-blur-md px-2 py-2">
+          {/* Avatar */}
+          <Link href="/" className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
+            <Image
+              src="/images/avatar.jpg"
+              alt="VICTOR UGO"
+              width={40}
+              height={40}
+              className="object-cover"
+            />
+          </Link>
 
-        <div className="h-6 w-px bg-border mx-2" />
+          {/* Mobile Hamburger Menu Button */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground ml-2"
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
 
-        {/* Navigation Icons */}
-        <Link href="/" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
-          <Home className="h-5 w-5" />
-        </Link>
-        <Link href="https://github.com/Uvecodes" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
-          <GitHubIcon />
-        </Link>
-        <Link href="www.linkedin.com/in/victor-ugo-011725288" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
-          <LinkedInIcon />
-        </Link>
-        <Link href="https://x.com/uvecodes" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
-          <XIcon />
-        </Link>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-1">
+            <div className="h-6 w-px bg-border mx-2" />
 
-        {/* Theme Toggle */}
-        <button
-          onClick={() => setIsDark(!isDark)}
-          className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
-        >
-          {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </button>
+            {/* Navigation Icons */}
+            <Link href="/" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+              <Home className="h-5 w-5" />
+            </Link>
+            <Link href="https://github.com/Uvecodes" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+              <GitHubIcon />
+            </Link>
+            <Link href="https://www.linkedin.com/in/victor-ugo-011725288" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+              <LinkedInIcon />
+            </Link>
+            <Link href="https://x.com/uvecodes" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+              <XIcon />
+            </Link>
 
-        <div className="h-6 w-px bg-border mx-2" />
+            {/* Theme Toggle */}
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+            >
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
 
-        {/* Resume Button */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
+            <div className="h-6 w-px bg-border mx-2" />
+
+            {/* Resume Button */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    onClick={handleResumeDownload}
+                    className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 h-auto gap-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    Resume
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Download Resume</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+
+        {/* Mobile Dropdown Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[calc(100vw-2rem)] max-w-sm rounded-2xl border border-border/50 bg-card/95 backdrop-blur-md shadow-lg py-4 px-2">
+            <div className="flex flex-col gap-1">
+              <Link 
+                href="/" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Home className="h-5 w-5" />
+                <span>Home</span>
+              </Link>
+              <Link 
+                href="https://github.com/Uvecodes" 
+                target="_blank"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <GitHubIcon />
+                <span>GitHub</span>
+              </Link>
+              <Link 
+                href="https://www.linkedin.com/in/victor-ugo-011725288" 
+                target="_blank"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <LinkedInIcon />
+                <span>LinkedIn</span>
+              </Link>
+              <Link 
+                href="https://x.com/uvecodes" 
+                target="_blank"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <XIcon />
+                <span>X (Twitter)</span>
+              </Link>
+              <button
+                onClick={() => setIsDark(!isDark)}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+              >
+                {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+              </button>
               <Button 
-                onClick={() => {
-                  const link = document.createElement('a')
-                  link.href = '/resume.pdf'
-                  link.download = 'Victor_Ugo_Resume.pdf'
-                  document.body.appendChild(link)
-                  link.click()
-                  document.body.removeChild(link)
-                }}
-                className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 h-auto gap-2"
+                onClick={handleResumeDownload}
+                className="rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 gap-2 justify-start mt-1"
               >
                 <Download className="h-4 w-4" />
-                Resume
+                Download Resume
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Download Resume</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   )
