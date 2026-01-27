@@ -5,6 +5,12 @@ import Image from "next/image"
 import Link from "next/link"
 import { Home, Sun, Moon, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const GitHubIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
@@ -27,6 +33,28 @@ const XIcon = () => (
 export function Navbar() {
   const [isDark, setIsDark] = useState(true)
   const [scrolled, setScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    // Check localStorage for saved theme preference
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme) {
+      const isThemeDark = savedTheme === 'dark'
+      setIsDark(isThemeDark)
+      if (isThemeDark) {
+        document.documentElement.classList.add('dark')
+        document.documentElement.classList.remove('light')
+      } else {
+        document.documentElement.classList.remove('dark')
+        document.documentElement.classList.add('light')
+      }
+    } else {
+      // Default to dark theme
+      document.documentElement.classList.add('dark')
+      document.documentElement.classList.remove('light')
+    }
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +63,21 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  useEffect(() => {
+    // Apply theme to document and save to localStorage
+    if (isDark) {
+      document.documentElement.classList.add('dark')
+      document.documentElement.classList.remove('light')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      document.documentElement.classList.add('light')
+      localStorage.setItem('theme', 'light')
+    }
+  }, [isDark])
+
+  if (!mounted) return null
 
   return (
     <nav className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${scrolled ? "top-2" : "top-4"}`}>
@@ -56,13 +99,13 @@ export function Navbar() {
         <Link href="/" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
           <Home className="h-5 w-5" />
         </Link>
-        <Link href="https://github.com" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+        <Link href="https://github.com/Uvecodes" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
           <GitHubIcon />
         </Link>
-        <Link href="https://linkedin.com" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+        <Link href="www.linkedin.com/in/victor-ugo-011725288" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
           <LinkedInIcon />
         </Link>
-        <Link href="https://x.com" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+        <Link href="https://x.com/uvecodes" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
           <XIcon />
         </Link>
 
@@ -77,10 +120,29 @@ export function Navbar() {
         <div className="h-6 w-px bg-border mx-2" />
 
         {/* Resume Button */}
-        <Button className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 h-auto gap-2">
-          <Download className="h-4 w-4" />
-          Resume
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                onClick={() => {
+                  const link = document.createElement('a')
+                  link.href = '/resume.pdf'
+                  link.download = 'Victor_Ugo_Resume.pdf'
+                  document.body.appendChild(link)
+                  link.click()
+                  document.body.removeChild(link)
+                }}
+                className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 h-auto gap-2"
+              >
+                <Download className="h-4 w-4" />
+                Resume
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Download Resume</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </nav>
   )

@@ -21,14 +21,54 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 relative">
-      {/* Dot pattern background */}
+    <section className="min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 relative overflow-hidden">
+      {/* Dot pattern background with color grading */}
       <div className="absolute inset-0 overflow-hidden">
+        {/* Primary dot layer */}
         <div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.15) 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.2) 1px, transparent 0)`,
+            backgroundSize: '10px 10px',
+            backgroundPosition: '0px 0px',
+            transform: 'rotate(45deg) scale(1.5)',
+            transformOrigin: 'center'
+          }}
+        />
+        
+        {/* Secondary dot layer with offset and different color */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, rgba(139, 92, 246, 0.15) 0.8px, transparent 0)`,
+            backgroundSize: '22px 22px',
+            backgroundPosition: '10px 10px',
+            transform: 'rotate(45deg) scale(1.5)',
+            transformOrigin: 'center'
+          }}
+        />
+        
+        {/* Tertiary accent dots */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(34, 197, 94, 0.1) 0.6px, transparent 0)`,
+            backgroundSize: '30px 30px',
+            backgroundPosition: '15px 15px',
+            transform: 'rotate(45deg) scale(1.5)',
+            transformOrigin: 'center'
+          }}
+        />
+        
+        {/* Quaternary dots in opposite diagonal direction */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.12) 1px, transparent 0)`,
+            backgroundSize: '10px 10px',
+            backgroundPosition: '-80px 80px',
+            transform: 'rotate(45deg) scale(1.5)',
+            transformOrigin: 'center'
           }}
         />
       </div>
