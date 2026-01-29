@@ -2,29 +2,135 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import GridAnimation from "./GridAnimation"
 
 export function HeroSection() {
   const [displayText, setDisplayText] = useState("")
   const fullText = "Software Engineer"
   
+  // Scrambling utilities
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()"
+  const getRandomChar = () => chars[Math.floor(Math.random() * chars.length)]
+  
   useEffect(() => {
+    let typewriterInterval: NodeJS.Timeout | null = null
+    let unscrambleInterval: NodeJS.Timeout | null = null
+    let typewriterTimeout: NodeJS.Timeout | null = null
+    let singleLetterInterval: NodeJS.Timeout | null = null
+    let activeSingleLetterScramble: NodeJS.Timeout | null = null
+    
+    // Phase 1: Typewriter effect
     let index = 0
-    const interval = setInterval(() => {
+    typewriterInterval = setInterval(() => {
       if (index <= fullText.length) {
         setDisplayText(fullText.slice(0, index))
         index++
       } else {
-        clearInterval(interval)
+        clearInterval(typewriterInterval!)
+        typewriterInterval = null
+        
+        // Transition: Wait 5000ms before starting unscrambling
+        typewriterTimeout = setTimeout(() => {
+          // Phase 2: Full text unscrambling effect
+          const revealedIndices = new Set<number>()
+          let scrambleIteration = 0
+          const maxScrambleIterations = 15
+          
+          unscrambleInterval = setInterval(() => {
+            if (scrambleIteration < maxScrambleIterations) {
+              // Scrambling phase: show random characters
+              const scrambled = fullText.split('').map((char, i) => {
+                if (revealedIndices.has(i)) {
+                  return char
+                }
+                return getRandomChar()
+              }).join('')
+              setDisplayText(scrambled)
+              scrambleIteration++
+            } else {
+              // Reveal phase: gradually reveal characters left to right
+              if (revealedIndices.size < fullText.length) {
+                revealedIndices.add(revealedIndices.size)
+                const revealed = fullText.split('').map((char, i) => {
+                  if (revealedIndices.has(i)) {
+                    return char
+                  }
+                  return getRandomChar()
+                }).join('')
+                setDisplayText(revealed)
+              } else {
+                // All characters revealed - start continuous single-letter scrambling
+                setDisplayText(fullText)
+                clearInterval(unscrambleInterval!)
+                unscrambleInterval = null
+                
+                // Phase 3: Continuous single-letter scrambling (every 3000ms)
+                const startSingleLetterScrambling = () => {
+                  // Clear any existing single-letter scramble
+                  if (activeSingleLetterScramble) {
+                    clearInterval(activeSingleLetterScramble)
+                    activeSingleLetterScramble = null
+                  }
+                  
+                  // Pick a random letter index
+                  const randomIndex = Math.floor(Math.random() * fullText.length)
+                  let singleScrambleIteration = 0
+                  const maxSingleScrambleIterations = 5
+                  
+                  activeSingleLetterScramble = setInterval(() => {
+                    if (singleScrambleIteration < maxSingleScrambleIterations) {
+                      // Scrambling phase: show random character at the selected index
+                      const scrambled = fullText.split('').map((char, i) => {
+                        if (i === randomIndex) {
+                          return getRandomChar()
+                        }
+                        return char
+                      }).join('')
+                      setDisplayText(scrambled)
+                      singleScrambleIteration++
+                    } else {
+                      // Unscramble: restore the correct character
+                      setDisplayText(fullText)
+                      if (activeSingleLetterScramble) {
+                        clearInterval(activeSingleLetterScramble)
+                        activeSingleLetterScramble = null
+                      }
+                    }
+                  }, 50)
+                }
+                
+                // Start first single-letter scramble after 3000ms
+                setTimeout(() => {
+                  startSingleLetterScrambling()
+                  
+                  // Then repeat every 3000ms
+                  singleLetterInterval = setInterval(() => {
+                    startSingleLetterScrambling()
+                  }, 3000)
+                }, 3000)
+              }
+            }
+          }, 50)
+        }, 5000)
       }
     }, 100)
-    return () => clearInterval(interval)
+    
+    return () => {
+      if (typewriterInterval) clearInterval(typewriterInterval)
+      if (unscrambleInterval) clearInterval(unscrambleInterval)
+      if (singleLetterInterval) clearInterval(singleLetterInterval)
+      if (activeSingleLetterScramble) clearInterval(activeSingleLetterScramble)
+      if (typewriterTimeout) clearTimeout(typewriterTimeout)
+    }
   }, [])
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 relative overflow-hidden">
-      {/* Dot pattern background with color grading */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Primary dot layer */}
+      {/* Grid Animation Background */}
+      <GridAnimation />
+
+      {/* Dot pattern background with color grading - COMMENTED OUT (replaced by GridAnimation) */}
+      {/* <div className="absolute inset-0 overflow-hidden">
         <div 
           className="absolute inset-0"
           style={{
@@ -36,7 +142,6 @@ export function HeroSection() {
           }}
         />
         
-        {/* Secondary dot layer with offset and different color */}
         <div 
           className="absolute inset-0"
           style={{
@@ -48,7 +153,6 @@ export function HeroSection() {
           }}
         />
         
-        {/* Tertiary accent dots */}
         <div 
           className="absolute inset-0"
           style={{
@@ -60,7 +164,6 @@ export function HeroSection() {
           }}
         />
         
-        {/* Quaternary dots in opposite diagonal direction */}
         <div 
           className="absolute inset-0"
           style={{
@@ -71,7 +174,7 @@ export function HeroSection() {
             transformOrigin: 'center'
           }}
         />
-      </div>
+      </div> */}
 
       <style>{`
         @keyframes shimmer {
@@ -119,9 +222,8 @@ export function HeroSection() {
         </h1>
 
         {/* Title with typewriter effect */}
-        <h2 className="text-4xl md:text-6xl font-bold text-primary mb-8">
+        <h2 className="text-4xl md:text-6xl font-bold text-primary mb-8 font-mono">
           {displayText}
-          <span className="animate-pulse"></span>
         </h2>
 
         {/* Description */}
