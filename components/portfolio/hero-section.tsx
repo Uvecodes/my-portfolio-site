@@ -6,6 +6,7 @@ import GridAnimation from "./GridAnimation"
 
 export function HeroSection() {
   const [displayText, setDisplayText] = useState("")
+  const [animatingLetterIndex, setAnimatingLetterIndex] = useState<number | null>(null)
   const fullText = "Software Engineer"
   
   // Scrambling utilities
@@ -64,39 +65,25 @@ export function HeroSection() {
                 clearInterval(unscrambleInterval!)
                 unscrambleInterval = null
                 
-                // Phase 3: Continuous single-letter scrambling (every 3000ms)
+                // Phase 3: Continuous single-letter scrambling (every 3000ms) - letter goes down, then comes in
                 const startSingleLetterScrambling = () => {
                   // Clear any existing single-letter scramble
                   if (activeSingleLetterScramble) {
-                    clearInterval(activeSingleLetterScramble)
+                    clearTimeout(activeSingleLetterScramble)
                     activeSingleLetterScramble = null
                   }
                   
                   // Pick a random letter index
                   const randomIndex = Math.floor(Math.random() * fullText.length)
-                  let singleScrambleIteration = 0
-                  const maxSingleScrambleIterations = 5
+                  setAnimatingLetterIndex(randomIndex)
                   
-                  activeSingleLetterScramble = setInterval(() => {
-                    if (singleScrambleIteration < maxSingleScrambleIterations) {
-                      // Scrambling phase: show random character at the selected index
-                      const scrambled = fullText.split('').map((char, i) => {
-                        if (i === randomIndex) {
-                          return getRandomChar()
-                        }
-                        return char
-                      }).join('')
-                      setDisplayText(scrambled)
-                      singleScrambleIteration++
-                    } else {
-                      // Unscramble: restore the correct character
-                      setDisplayText(fullText)
-                      if (activeSingleLetterScramble) {
-                        clearInterval(activeSingleLetterScramble)
-                        activeSingleLetterScramble = null
-                      }
-                    }
-                  }, 50)
+                  // Clear animating state after CSS animation completes (letter down + letter in)
+                  const letterRollDuration = 550
+                  const timeoutId = setTimeout(() => {
+                    setAnimatingLetterIndex(null)
+                    activeSingleLetterScramble = null
+                  }, letterRollDuration)
+                  activeSingleLetterScramble = timeoutId as NodeJS.Timeout
                 }
                 
                 // Start first single-letter scramble after 3000ms
@@ -119,7 +106,7 @@ export function HeroSection() {
       if (typewriterInterval) clearInterval(typewriterInterval)
       if (unscrambleInterval) clearInterval(unscrambleInterval)
       if (singleLetterInterval) clearInterval(singleLetterInterval)
-      if (activeSingleLetterScramble) clearInterval(activeSingleLetterScramble)
+      if (activeSingleLetterScramble) clearTimeout(activeSingleLetterScramble)
       if (typewriterTimeout) clearTimeout(typewriterTimeout)
     }
   }, [])
@@ -177,6 +164,35 @@ export function HeroSection() {
       </div> */}
 
       <style>{`
+        @keyframes letter-roll {
+          0% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+          45% {
+            transform: translateY(100%);
+            opacity: 0;
+          }
+          55% {
+            transform: translateY(-100%);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        .letter-cell {
+          display: inline-block;
+          overflow: hidden;
+          vertical-align: top;
+          height: 1em;
+          line-height: 1;
+        }
+        .letter-roll {
+          display: inline-block;
+          animation: letter-roll 550ms ease-in-out forwards;
+        }
         @keyframes shimmer {
           0% {
             left: -100%;
@@ -223,7 +239,17 @@ export function HeroSection() {
 
         {/* Title with typewriter effect */}
         <h2 className="text-4xl md:text-6xl font-bold text-primary mb-8 font-mono">
-          {displayText}
+          {displayText.split("").map((char, i) => {
+            const isAnimating = animatingLetterIndex === i
+            return (
+              <span
+                key={`${i}-${char}-${isAnimating}`}
+                className="letter-cell"
+              >
+                <span className={isAnimating ? "letter-roll" : ""}>{char}</span>
+              </span>
+            )
+          })}
         </h2>
 
         {/* Description */}
