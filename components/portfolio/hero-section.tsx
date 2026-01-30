@@ -7,7 +7,7 @@ import GridAnimation from "./GridAnimation"
 export function HeroSection() {
   const [displayText, setDisplayText] = useState("")
   const [animatingLetterIndex, setAnimatingLetterIndex] = useState<number | null>(null)
-  const fullText = "Software Engineer"
+  const fullText = "Software-Engineer"
   
   // Scrambling utilities
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()"
@@ -30,75 +30,62 @@ export function HeroSection() {
         clearInterval(typewriterInterval!)
         typewriterInterval = null
         
-        // Transition: Wait 5000ms before starting unscrambling
+        // Flow: after typewriter → single-letter scramble (word scramble commented out)
+        setDisplayText(fullText)
+        
+        // Word scramble logic - COMMENTED OUT
+        // typewriterTimeout = setTimeout(() => {
+        //   const revealedIndices = new Set<number>()
+        //   let scrambleIteration = 0
+        //   const maxScrambleIterations = 15
+        //   unscrambleInterval = setInterval(() => {
+        //     if (scrambleIteration < maxScrambleIterations) {
+        //       const scrambled = fullText.split('').map((char, i) => {
+        //         if (revealedIndices.has(i)) return char
+        //         return getRandomChar()
+        //       }).join('')
+        //       setDisplayText(scrambled)
+        //       scrambleIteration++
+        //     } else {
+        //       if (revealedIndices.size < fullText.length) {
+        //         revealedIndices.add(revealedIndices.size)
+        //         const revealed = fullText.split('').map((char, i) => {
+        //           if (revealedIndices.has(i)) return char
+        //           return getRandomChar()
+        //         }).join('')
+        //         setDisplayText(revealed)
+        //       } else {
+        //         setDisplayText(fullText)
+        //         clearInterval(unscrambleInterval!)
+        //         unscrambleInterval = null
+        //         // ... single-letter start was here
+        //       }
+        //     }
+        //   }, 50)
+        // }, 5000)
+        
+        // Single-letter scramble: start after 3000ms, then repeat every 3000ms
+        const startSingleLetterScrambling = () => {
+          if (activeSingleLetterScramble) {
+            clearTimeout(activeSingleLetterScramble)
+            activeSingleLetterScramble = null
+          }
+          const randomIndex = Math.floor(Math.random() * fullText.length)
+          setAnimatingLetterIndex(randomIndex)
+          const letterRollDuration = 550
+          const timeoutId = setTimeout(() => {
+            setAnimatingLetterIndex(null)
+            activeSingleLetterScramble = null
+          }, letterRollDuration)
+          activeSingleLetterScramble = timeoutId as NodeJS.Timeout
+        }
+        
         typewriterTimeout = setTimeout(() => {
-          // Phase 2: Full text unscrambling effect
-          const revealedIndices = new Set<number>()
-          let scrambleIteration = 0
-          const maxScrambleIterations = 15
-          
-          unscrambleInterval = setInterval(() => {
-            if (scrambleIteration < maxScrambleIterations) {
-              // Scrambling phase: show random characters
-              const scrambled = fullText.split('').map((char, i) => {
-                if (revealedIndices.has(i)) {
-                  return char
-                }
-                return getRandomChar()
-              }).join('')
-              setDisplayText(scrambled)
-              scrambleIteration++
-            } else {
-              // Reveal phase: gradually reveal characters left to right
-              if (revealedIndices.size < fullText.length) {
-                revealedIndices.add(revealedIndices.size)
-                const revealed = fullText.split('').map((char, i) => {
-                  if (revealedIndices.has(i)) {
-                    return char
-                  }
-                  return getRandomChar()
-                }).join('')
-                setDisplayText(revealed)
-              } else {
-                // All characters revealed - start continuous single-letter scrambling
-                setDisplayText(fullText)
-                clearInterval(unscrambleInterval!)
-                unscrambleInterval = null
-                
-                // Phase 3: Continuous single-letter scrambling (every 3000ms) - letter goes down, then comes in
-                const startSingleLetterScrambling = () => {
-                  // Clear any existing single-letter scramble
-                  if (activeSingleLetterScramble) {
-                    clearTimeout(activeSingleLetterScramble)
-                    activeSingleLetterScramble = null
-                  }
-                  
-                  // Pick a random letter index
-                  const randomIndex = Math.floor(Math.random() * fullText.length)
-                  setAnimatingLetterIndex(randomIndex)
-                  
-                  // Clear animating state after CSS animation completes (letter down + letter in)
-                  const letterRollDuration = 550
-                  const timeoutId = setTimeout(() => {
-                    setAnimatingLetterIndex(null)
-                    activeSingleLetterScramble = null
-                  }, letterRollDuration)
-                  activeSingleLetterScramble = timeoutId as NodeJS.Timeout
-                }
-                
-                // Start first single-letter scramble after 3000ms
-                setTimeout(() => {
-                  startSingleLetterScrambling()
-                  
-                  // Then repeat every 3000ms
-                  singleLetterInterval = setInterval(() => {
-                    startSingleLetterScrambling()
-                  }, 3000)
-                }, 3000)
-              }
-            }
-          }, 50)
-        }, 5000)
+          startSingleLetterScrambling()
+          singleLetterInterval = setInterval(() => {
+            startSingleLetterScrambling()
+          }, 3000)
+        }, 3000)
       }
     }, 100)
     
@@ -254,7 +241,7 @@ export function HeroSection() {
 
         {/* Description */}
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-          Creative software engineer specializing in building innovative solutions that bridge technology and user experience. I craft clean, efficient code and transform ideas into impactful digital products.
+         Results-driven software engineer with a systems-oriented approach to product development. Experienced in implementing end-to-end solutions from responsive frontend interfaces to robust backend services while maintaining attention to code quality and security hygiene.
         </p>
 
         {/* CTA Buttons */}

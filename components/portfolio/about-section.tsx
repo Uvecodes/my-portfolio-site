@@ -17,13 +17,13 @@ export function AboutSection() {
               />
             </div>
             {/* Tech Alias Card */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 rounded-xl bg-card/90 backdrop-blur-sm border border-border px-4 py-3">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
+            <div className="group absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 rounded-xl bg-card/90 backdrop-blur-sm border border-border px-4 py-3">
+              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center transition-transform duration-300 group-hover:scale-x-[-1]">
                 <Code2 className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <p className="font-semibold text-heading">UVECODES</p>
-                <p className="text-sm text-muted-foreground">Tech Alias</p>
+                <p className="text-sm text-muted-foreground">Tech Guru</p>
               </div>
             </div>
           </div>
