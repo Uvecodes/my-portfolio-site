@@ -53,7 +53,7 @@ export default function GridAnimation() {
       
       // Get theme colors
       const primaryColor = getThemeColor('--primary', '#3b82f6');
-      const gridColor = hexToRgba(primaryColor, 0.15); // Subtle opacity
+      const gridColor = hexToRgba(primaryColor, 0.22); // Grid line opacity
       
       const gridSize = 50;
       const centerX = width / 2;
@@ -140,7 +140,7 @@ export default function GridAnimation() {
     <div ref={containerRef} className="absolute inset-0 pointer-events-none">
       <canvas 
         ref={canvasRef} 
-        className="absolute inset-0 w-full h-full opacity-90"
+        className="absolute inset-0 w-full h-full opacity-95"
       />
     </div>
   );

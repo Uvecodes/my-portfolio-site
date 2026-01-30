@@ -36,10 +36,11 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const userHasToggledRef = useRef(false)
 
+  // On mount: read saved theme and apply so it persists across page navigations
   useEffect(() => {
     setMounted(true)
-    // Check localStorage for saved theme preference
     const savedTheme = localStorage.getItem('theme')
     if (savedTheme) {
       const isThemeDark = savedTheme === 'dark'
@@ -52,9 +53,10 @@ export function Navbar() {
         document.documentElement.classList.add('light')
       }
     } else {
-      // Default to dark theme
+      // No saved preference: default to dark and persist it
       document.documentElement.classList.add('dark')
       document.documentElement.classList.remove('light')
+      localStorage.setItem('theme', 'dark')
     }
   }, [])
 
@@ -66,8 +68,9 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Apply/save theme only when user has clicked the toggle (so we don't overwrite saved preference on mount)
   useEffect(() => {
-    // Apply theme to document and save to localStorage
+    if (!userHasToggledRef.current) return
     if (isDark) {
       document.documentElement.classList.add('dark')
       document.documentElement.classList.remove('light')
@@ -78,6 +81,11 @@ export function Navbar() {
       localStorage.setItem('theme', 'light')
     }
   }, [isDark])
+
+  const handleThemeToggle = () => {
+    userHasToggledRef.current = true
+    setIsDark((prev) => !prev)
+  }
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -151,7 +159,7 @@ export function Navbar() {
 
             {/* Theme Toggle */}
             <button
-              onClick={() => setIsDark(!isDark)}
+              onClick={handleThemeToggle}
               className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
             >
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -219,7 +227,7 @@ export function Navbar() {
                 <span>X (Twitter)</span>
               </Link>
               <button
-                onClick={() => setIsDark(!isDark)}
+                onClick={handleThemeToggle}
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
               >
                 {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}

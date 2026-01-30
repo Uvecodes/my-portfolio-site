@@ -2,6 +2,7 @@ import { Navbar } from "@/components/portfolio/navbar"
 import { HeroSection } from "@/components/portfolio/hero-section"
 import { AboutSection } from "@/components/portfolio/about-section"
 import { StatsSection } from "@/components/portfolio/stats-section"
+import { WorksSection } from "@/components/portfolio/works-section"
 import { SkillsSection } from "@/components/portfolio/skills-section"
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <HeroSection />
       <AboutSection />
       <StatsSection />
+      <WorksSection />
       <SkillsSection />
     </main>
   )

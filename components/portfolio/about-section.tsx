@@ -1,7 +1,50 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { Code2 } from "lucide-react"
 
+const TYPEWRITER_TEXTS = [
+  { full: "Passionate about creating impactful solutions", highlight: "impactful" },
+  { full: "Driven to build solutions that make a real difference", highlight: "solutions" },
+  { full: "Crafting meaningful solutions that matter", highlight: "meaningful" },
+]
+const TYPE_DELAY_MS = 80
+const PAUSE_BETWEEN_TEXTS_MS = 2500
+
+// Longest text for reserved space so layout doesn't shift
+const RESERVE_TEXT = TYPEWRITER_TEXTS.reduce(
+  (best, t) => (t.full.length > best.length ? t.full : best),
+  TYPEWRITER_TEXTS[0].full
+)
+
 export function AboutSection() {
+  const [textIndex, setTextIndex] = useState(0)
+  const [displayText, setDisplayText] = useState("")
+
+  useEffect(() => {
+    let charIndex = 0
+    let timeoutId: ReturnType<typeof setTimeout>
+    const current = TYPEWRITER_TEXTS[textIndex]
+
+    const typeNext = () => {
+      if (charIndex <= current.full.length) {
+        setDisplayText(current.full.slice(0, charIndex))
+        charIndex++
+        timeoutId = setTimeout(typeNext, TYPE_DELAY_MS)
+      } else {
+        timeoutId = setTimeout(() => {
+          setTextIndex((i) => (i + 1) % TYPEWRITER_TEXTS.length)
+        }, PAUSE_BETWEEN_TEXTS_MS)
+      }
+    }
+
+    setDisplayText("")
+    charIndex = 0
+    timeoutId = setTimeout(typeNext, TYPE_DELAY_MS)
+    return () => clearTimeout(timeoutId)
+  }, [textIndex])
+
   return (
     <section id="about" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
@@ -35,17 +78,33 @@ export function AboutSection() {
               <span className="text-sm font-medium text-primary">About Me</span>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-heading mb-6 leading-tight">
-              Passionate about creating{" "}
-              <span className="text-primary">impactful</span> solutions
+            {/* Typewriter heading: 3 versions cycle; longest text reserves space */}
+            <h2 className="text-3xl md:text-4xl font-bold text-heading mb-6 leading-tight relative">
+              <span className="invisible" aria-hidden="true">
+                {RESERVE_TEXT}
+              </span>
+              <span className="absolute inset-0">
+                {(() => {
+                  const { highlight } = TYPEWRITER_TEXTS[textIndex]
+                  return displayText.includes(highlight) ? (
+                    <>
+                      {displayText.split(highlight)[0]}
+                      <span className="text-primary">{highlight}</span>
+                      {displayText.split(highlight)[1]}
+                    </>
+                  ) : (
+                    displayText
+                  )
+                })()}
+              </span>
             </h2>
 
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                {"I'm VICTOR UGO, a software engineer passionate about creating innovative solutions that make a real impact. With expertise spanning full-stack development, I bring ideas to life through elegant code and thoughtful design."}
+                {"I'm VICTOR UGO—software engineer and full-stack builder. I ship systems that scale, interfaces that stick, and code that holds up. From API to UI, I turn specs into products that actually ship."}
               </p>
               <p>
-                {"My work focuses on building scalable applications, optimizing performance, and delivering seamless user experiences. I believe in writing code that's not just functional, but maintainable, efficient, and future-proof."}
+                {"I focus on scalable architecture, performance at scale, and UX that feels seamless. The goal: code that's maintainable, efficient, and built to last—functional today, future-proof tomorrow."}
               </p>
             </div>
           </div>

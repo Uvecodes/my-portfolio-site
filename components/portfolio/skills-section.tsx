@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useRef, useState } from "react"
 import { Code2, Server, Cloud, Wrench } from "lucide-react"
 
 const skillCategories = [
@@ -71,9 +74,37 @@ const techLogos = [
   },
 ]
 
+// Zoom on scroll - COMMENTED OUT (section stays at 100%)
+// const MIN_SCALE = 0.88
+// const MAX_SCALE = 1
+
 export function SkillsSection() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const [isInView, setIsInView] = useState(false)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const checkInView = () => {
+      const rect = section.getBoundingClientRect()
+      const viewportHeight = typeof window !== "undefined" ? window.innerHeight : 800
+      // Section is "in view" when its top is above ~80% of viewport and bottom still visible
+      const inView = rect.top < viewportHeight * 0.8 && rect.bottom > 80
+      setIsInView(inView)
+    }
+
+    checkInView()
+    window.addEventListener("scroll", checkInView, { passive: true })
+    window.addEventListener("resize", checkInView)
+    return () => {
+      window.removeEventListener("scroll", checkInView)
+      window.removeEventListener("resize", checkInView)
+    }
+  }, [])
+
   return (
-    <section id="skills" className="py-20 px-4">
+    <section ref={sectionRef} id="skills" className="py-20 px-4 overflow-hidden">
       <div className="max-w-6xl mx-auto">
         {/* Section Badge */}
         <div className="text-center mb-12">
@@ -88,12 +119,18 @@ export function SkillsSection() {
           </p>
         </div>
 
-        {/* Skill Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-          {skillCategories.map((category, index) => (
+        {/* Skill Cards - left two slide in from left, right two from right on scroll into section */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16 overflow-hidden">
+          {skillCategories.map((category, index) => {
+            const isLeft = index < 2
+            const offsetX = isLeft ? "-120%" : "120%"
+            return (
             <div
               key={index}
-              className="rounded-2xl border border-border bg-card p-6"
+              className="rounded-2xl border border-border bg-card p-6 transition-transform duration-[2000ms] ease-out"
+              style={{
+                transform: isInView ? "translateX(0)" : `translateX(${offsetX})`,
+              }}
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
@@ -112,7 +149,8 @@ export function SkillsSection() {
                 ))}
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Tech Logo Marquee */}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import GridAnimation from "./GridAnimation"
 
@@ -100,8 +101,22 @@ export function HeroSection() {
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 relative overflow-hidden">
+      {/* Background video - behind grid and content */}
+      <div className="absolute inset-0 z-0 opacity-[0.03]">
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/images/grok-video-6a06e7e5-427a-444e-8632-9c7cb3fc82b2.mp4"
+          loop
+          muted
+          playsInline
+          autoPlay
+          aria-hidden
+        />
+      </div>
       {/* Grid Animation Background */}
-      <GridAnimation />
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        <GridAnimation />
+      </div>
 
       {/* Dot pattern background with color grading - COMMENTED OUT (replaced by GridAnimation) */}
       {/* <div className="absolute inset-0 overflow-hidden">
@@ -247,17 +262,19 @@ export function HeroSection() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button 
+            asChild
             size="lg" 
             className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg"
           >
-            View My Work
+            <Link href="/works">View My Work</Link>
           </Button>
           <Button 
+            asChild
             size="lg" 
             variant="outline" 
             className="rounded-full border-primary text-primary hover:bg-primary/10 px-8 py-6 text-lg bg-transparent"
           >
-            Get In Touch
+            <Link href="/contact">Get In Touch</Link>
           </Button>
         </div>
       </div>
