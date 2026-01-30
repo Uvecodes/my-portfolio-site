@@ -52,11 +52,14 @@ export function AboutSection() {
           {/* Illustration */}
           <div className="relative">
             <div className="relative w-full aspect-[3/4] max-w-md mx-auto rounded-3xl overflow-hidden bg-primary">
-              <Image
-                src="/images/portrait.jpg"
-                alt="VICTOR UGO"
-                fill
-                className="object-cover"
+              <video
+                src="/images/portrait-video.mp4"
+                muted
+                loop
+                playsInline
+                autoPlay
+                className="absolute inset-0 w-full h-full object-cover"
+                aria-label="VICTOR UGO"
               />
             </div>
             {/* Tech Alias Card */}
