@@ -240,7 +240,7 @@ export function HeroSection() {
         </h1>
 
         {/* Title with typewriter effect */}
-        <h2 className="text-4xl md:text-6xl font-bold text-primary mb-8 font-mono">
+        <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-primary mb-8 font-mono">
           {displayText.split("").map((char, i) => {
             const isAnimating = animatingLetterIndex === i
             return (

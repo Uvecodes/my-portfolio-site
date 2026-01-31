@@ -4,28 +4,25 @@
     "description": "Personal portfolio built with Next.js—showcasing projects, skills, and contact. Responsive, theme-aware, and deployed on Netlify.",
     "image": "/images/my-portfolio.png",
     "tags": ["React", "Next.js", "Tailwind", "TypeScript", "Vanilla JS"],
-    "href": "https://uvecodes.netlify.app/"
+    "href": "https://uvecodes.netlify.app/",
+    "git-repo": "https://github.com/Uvecodes/my-portfolio-site"
   },
   {
     "title": "Catch-Them-Young",
     "description": "A spiritual, moral and educational platform dedicated to nurturing young minds through interactive learning modules, engaging content, and a supportive community.",
     "image": "/images/cty.png",
     "tags": ["HTML", "CSS", "Vanilla.js", "Node.js", "Firebase", "Express"],
-    "href": "https://catch-them-young.netlify.app"
+    "href": "https://catch-them-young.netlify.app",
+    "git-repo": "https://github.com/Uvecodes/cty"
   },
   {
-    "title": "Project Three",
-    "description": "Production-grade build with focus on maintainability and future-proof design. Built to last.",
-    "image": "/images/project-3.jpg",
-    "tags": ["Next.js", "Docker", "AWS"],
-    "href": "#"
-  },
-
-  {
-    "title": "Project Three",
-    "description": "Production-grade build with focus on maintainability and future-proof design. Built to last.",
-    "image": "/images/project-3.jpg",
-    "tags": ["Next.js", "Docker", "AWS"],
-    "href": "#"
+    "title": "Name-it",
+    "description": "An e-commerce platform for selling and managing products.",
+    "image": "/images/name-it.png",
+    "tags": ["HTML", "CSS", "Vanilla", "Node.js", "Express", "Firebase"],
+    "href": "#",
+    "git-repo": "https://github.com/Uvecodes/name-it"
   }
+
+  
 ]
