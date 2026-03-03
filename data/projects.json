@@ -19,10 +19,20 @@
     "title": "Name-it",
     "description": "An e-commerce platform for selling and managing products.",
     "image": "/images/name-it.png",
-    "tags": ["HTML", "CSS", "Vanilla", "Node.js", "Express", "Firebase"],
+    "tags": ["HTML", "CSS", "Vanilla.js", "Node.js", "Express", "Firebase"],
     "href": "#",
     "git-repo": "https://github.com/Uvecodes/name-it"
+  },
+
+  {
+    "title": "THE MOTHER SUITE",
+    "description": "The Mother Suite supports working women through every stage — prenatal care, postpartum recovery, and your baby's first year. Designed for the mom who can't always step away from the boardroom.",
+    "image": "/images/the-mother-suite.png",
+    "tags": ["HTML", "CSS", "Vanilla.js", "Node.js", "Express", "Firebase"],
+    "href": "https://the-mother-suite.netlify.app/",
+    "git-repo": "https://github.com/Uvecodes/hackathon"
   }
+
 
   
 ]
