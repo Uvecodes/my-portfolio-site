@@ -31,7 +31,17 @@
     "tags": ["HTML", "CSS", "Vanilla.js", "Node.js", "Express", "Firebase"],
     "href": "https://the-mother-suite.netlify.app/",
     "git-repo": "https://github.com/Uvecodes/hackathon"
+  },
+
+  {
+    "title": "SING PRAISES",
+    "description": "An interactive platform for creating and sharing praise messages.",
+    "image": "/images/sing-praises.png",
+    "tags": ["HTML", "CSS", "Vanilla.js", "Node.js", "Express", "Firebase"],
+    "href": "https://the-mother-suite.netlify.app/",
+    "git-repo": "https://github.com/Uvecodes/hackathon"
   }
+
 
 
   
