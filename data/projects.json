@@ -8,7 +8,7 @@
     "git-repo": "https://github.com/Uvecodes/my-portfolio-site"
   },
   {
-    "title": "Catch-Them-Young",
+    "title": "Tenderoots",
     "description": "A spiritual, moral and educational platform dedicated to nurturing young minds through interactive learning modules, engaging content, and a supportive community.",
     "image": "/images/cty.png",
     "tags": ["HTML", "CSS", "Vanilla.js", "Node.js", "Firebase", "Express"],
