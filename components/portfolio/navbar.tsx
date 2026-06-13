@@ -150,7 +150,7 @@ export function Navbar() {
             <Link href="https://github.com/Uvecodes" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
               <GitHubIcon />
             </Link>
-            <Link href="https://www.linkedin.com/in/victor-ugo-011725288" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+            <Link href="https://www.linkedin.com/in/uvea?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
               <LinkedInIcon />
             </Link>
             <Link href="https://x.com/uvecodes" target="_blank" className="p-2 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
